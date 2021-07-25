@@ -34,8 +34,8 @@ services:
   mysql:
     image: mysql:8.0
     container_name: mysql
-    # restart: unless-stopped
-    # tty: true
+    restart: unless-stopped
+    tty: true
     ports:
       - 3306:3306
     volumes:
@@ -69,20 +69,20 @@ services:
     networks:
       - laravel
 
-  # composer:
-  #   build:
-  #     context: .
-  #     dockerfile: composer.dockerfile
-  #   container_name: composer
-  #   volumes:
-  #     - ./src:/var/www/html
-  #   working_dir: /var/www/html
-  #   depends_on:
-  #     - php
-  #   user: laravel
-  #   entrypoint: [ 'composer', '--ignore-platform-reqs' ]
-  #   networks:
-  #     - laravel
+  composer:
+    build:
+      context: .
+      dockerfile: composer.dockerfile
+    container_name: composer
+    volumes:
+      - ./src:/var/www/html
+    working_dir: /var/www/html
+    depends_on:
+      - php
+    user: laravel
+    entrypoint: [ 'composer', '--ignore-platform-reqs' ]
+    networks:
+      - laravel
 
   artisan:
     build:
