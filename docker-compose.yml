@@ -69,20 +69,20 @@ services:
     networks:
       - laravel
 
-  composer:
-    build:
-      context: .
-      dockerfile: composer.dockerfile
-    container_name: composer
-    volumes:
-      - ./src:/var/www/html
-    working_dir: /var/www/html
-    depends_on:
-      - php
-    user: laravel
-    entrypoint: [ 'composer', '--ignore-platform-reqs' ]
-    networks:
-      - laravel
+  # composer:
+  #   build:
+  #     context: .
+  #     dockerfile: composer.dockerfile
+  #   container_name: composer
+  #   volumes:
+  #     - ./src:/var/www/html
+  #   working_dir: /var/www/html
+  #   depends_on:
+  #     - php
+  #   user: laravel
+  #   entrypoint: [ 'composer', '--ignore-platform-reqs' ]
+  #   networks:
+  #     - laravel
 
   artisan:
     build:
