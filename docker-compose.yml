@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: nginx.dockerfile
     container_name: nginx
-    restart: unless-stopped
+    restart: always
     tty: true
     ports:
       - 80:80
@@ -23,7 +23,7 @@ services:
       context: .
       dockerfile: php.dockerfile
     container_name: php
-    restart: unless-stopped
+    restart: always
     tty: true
     volumes:
       - ./src:/var/www/html:delegated
@@ -33,7 +33,7 @@ services:
   # mysql:
   #   image: mysql:8.0
   #   container_name: mysql
-  #   restart: unless-stopped
+  #   restart: always
   #   tty: true
   #   ports:
   #     - 3306:3306
@@ -49,24 +49,24 @@ services:
   #   networks:
   #     - laravel
 
-  redis:
-    image: redis:alpine
-    container_name: redis
-    restart: unless-stopped
-    ports:
-      - 6379:6379
-    networks:
-      - laravel
+  # redis:
+  #   image: redis:alpine
+  #   container_name: redis
+  #   restart: always
+  #   ports:
+  #     - 6379:6379
+  #   networks:
+  #     - laravel
 
-  npm:
-    image: node:13.7
-    container_name: npm
-    volumes:
-      - ./src:/var/www/html
-    working_dir: /var/www/html
-    entrypoint: [ 'npm' ]
-    networks:
-      - laravel
+  # npm:
+  #   image: node:13.7
+  #   container_name: npm
+  #   volumes:
+  #     - ./src:/var/www/html
+  #   working_dir: /var/www/html
+  #   entrypoint: [ 'npm' ]
+  #   networks:
+  #     - laravel
 
   composer:
     build:
@@ -79,24 +79,25 @@ services:
     depends_on:
       - php
     user: laravel
-    entrypoint: [ 'composer', '--ignore-platform-reqs' ]
+    # entrypoint: [ 'composer', '--ignore-platform-reqs' ]
+    entrypoint: [ 'composer' ]
     networks:
       - laravel
 
-  artisan:
-    build:
-      context: .
-      dockerfile: php.dockerfile
-    container_name: artisan
-    volumes:
-      - ./src:/var/www/html:delegated
-    depends_on:
-      - composer
-    working_dir: /var/www/html
-    user: laravel
-    entrypoint: [ 'php', '/var/www/html/artisan' ]
-    networks:
-      - laravel
+  # artisan:
+  #   build:
+  #     context: .
+  #     dockerfile: php.dockerfile
+  #   container_name: artisan
+  #   volumes:
+  #     - ./src:/var/www/html:delegated
+  #   depends_on:
+  #     - composer
+  #   working_dir: /var/www/html
+  #   user: laravel
+  #   entrypoint: [ 'php', '/var/www/html/artisan' ]
+  #   networks:
+  #     - laravel
 
 networks:
   laravel:
