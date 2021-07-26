@@ -80,7 +80,7 @@ services:
     depends_on:
       - php
     user: laravel
-    entrypoint: [ 'composer' ]
+    entrypoint: [ 'composer install' ]
     networks:
       - laravel
 
@@ -92,6 +92,7 @@ services:
     volumes:
       - ./src:/var/www/html:delegated
     depends_on:
+      - composer
       - mysql
     working_dir: /var/www/html
     user: laravel
