@@ -80,7 +80,7 @@ services:
     depends_on:
       - php
     user: laravel
-    entrypoint: [ 'composer install' ]
+    entrypoint: [ 'composer' ]
     networks:
       - laravel
 
