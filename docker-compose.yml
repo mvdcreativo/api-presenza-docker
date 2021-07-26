@@ -80,7 +80,7 @@ services:
     depends_on:
       - php
     user: laravel
-    entrypoint: [ 'composer', '-i' ]
+    entrypoint: [ 'composer' ]
     networks:
       - laravel
 
