@@ -15,7 +15,6 @@ services:
     depends_on:
       - php
       - redis
-      - mysql
     networks:
       - laravel
 
@@ -31,24 +30,24 @@ services:
     networks:
       - laravel
 
-  mysql:
-    image: mysql:8.0
-    container_name: mysql
-    restart: unless-stopped
-    tty: true
-    ports:
-      - 3306:3306
-    volumes:
-      - ./mysql:/var/lib/mysql
-    environment:
-      MYSQL_DATABASE: ${DB_DATABASE}
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
-    networks:
-      - laravel
+  # mysql:
+  #   image: mysql:8.0
+  #   container_name: mysql
+  #   restart: unless-stopped
+  #   tty: true
+  #   ports:
+  #     - 3306:3306
+  #   volumes:
+  #     - ./mysql:/var/lib/mysql
+  #   environment:
+  #     MYSQL_DATABASE: ${DB_DATABASE}
+  #     MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+  #     MYSQL_USER: ${DB_USER}
+  #     MYSQL_PASSWORD: ${DB_PASSWORD}
+  #     SERVICE_TAGS: dev
+  #     SERVICE_NAME: mysql
+  #   networks:
+  #     - laravel
 
   redis:
     image: redis:alpine
@@ -93,7 +92,6 @@ services:
       - ./src:/var/www/html:delegated
     depends_on:
       - composer
-      - mysql
     working_dir: /var/www/html
     user: laravel
     entrypoint: [ 'php', '/var/www/html/artisan' ]
@@ -103,7 +101,3 @@ services:
 networks:
   laravel:
     driver: bridge
-
-volumes:
-  mysql:
-    driver: local
