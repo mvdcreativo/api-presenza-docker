@@ -27,6 +27,8 @@ services:
     volumes:
       - ./src:/var/www/html:delegated
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    ports:
+      - 9000:80
     networks:
       - laravel
 
