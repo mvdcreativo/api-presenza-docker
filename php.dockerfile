@@ -1,8 +1,20 @@
 FROM php:7.4-fpm-buster
 
-# ADD ./php/www.conf /usr/local/etc/php-fpm.d/
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip
 
-# RUN addgroup -g 1000 laravel && adduser -G laravel -g laravel -s /bin/bash -D laravel
+# Clear cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Install PHP extensions
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 RUN mkdir -p /var/www/html
 
@@ -11,8 +23,8 @@ RUN mkdir -p /var/www/html
 RUN chmod -R 777 /var/www/html
 
 # Install Composer
-RUN mkdir -p /usr/bin/composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && chmod +x /usr/bin/composer
+# Get latest Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
