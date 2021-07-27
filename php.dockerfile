@@ -2,7 +2,7 @@ FROM php:7.4-fpm-buster
 
 ADD ./php/www.conf /usr/local/etc/php-fpm.d/
 
-RUN addgroup -g 1000 laravel && adduser -G laravel -g laravel -s /bin/sh -D laravel
+RUN addgroup -g 1000 laravel && adduser -G laravel -g laravel -s /bin/bash -D laravel
 
 RUN mkdir -p /var/www/html
 
