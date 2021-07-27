@@ -7,6 +7,8 @@ RUN addgroup -g 1000 laravel && adduser -G laravel -g laravel -s /bin/sh -D lara
 RUN mkdir -p /var/www/html
 
 RUN chown laravel:laravel /var/www/html
+
+RUN apt-get install php7.4-gd
 # RUN chmod -R 777 /var/www/html
 
 # Install Composer
