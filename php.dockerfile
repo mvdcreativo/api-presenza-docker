@@ -8,12 +8,21 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     zip \
-    unzip
+    vim \
+    unzip \
+    # needed for gd
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev 
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
+RUN docker-php-ext-configure gd \
+    --with-jpeg=/usr/include/ \
+    --with-freetype=/usr/include/
+    
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 RUN mkdir -p /var/www/html
