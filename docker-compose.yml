@@ -1,19 +1,55 @@
 version: '3.7'
 services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - certs:/etc/nginx/certs:ro
+      - vhostd:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+    labels:
+      - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
+    depends_on:
+      - php
+    networks:
+      - laravel
+
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    restart: always
+    environment:
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+    volumes:
+      - certs:/etc/nginx/certs:rw
+      - vhostd:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on:
+      - nginx-proxy
+    networks:
+      - laravel
+
   nginx:
     build:
       context: .
       dockerfile: nginx.dockerfile
     container_name: nginx
     restart: always
-    tty: true
-    ports:
-      - 80:80
-      - 443:443
+    expose:
+      - "80"
     volumes:
-      - ./src:/var/www/html:delegated
+      - ./src:/var/www/html:ro
+    environment:
+      - VIRTUAL_HOST=mvdcreativo.tk,www.mvdcreativo.tk
+      - LETSENCRYPT_HOST=mvdcreativo.tk,www.mvdcreativo.tk
+      - LETSENCRYPT_EMAIL=mvdcreativo@gmail.com
     depends_on:
-      - php
+      - nginx-proxy
+      - letsencrypt
     networks:
       - laravel
 
@@ -100,7 +136,12 @@ services:
   #   entrypoint: [ 'php', '/var/www/html/artisan' ]
   #   networks:
   #     - laravel
+volumes: 
+  certs:
+  html:
+  vhostd:
 
 networks:
   laravel:
     driver: bridge
+

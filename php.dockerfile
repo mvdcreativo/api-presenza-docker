@@ -13,15 +13,7 @@ RUN apt-get update && apt-get install -y \
     # needed for gd
     libfreetype6-dev \
     libjpeg62-turbo-dev \
-    certbot \
     libpng-dev 
-
-RUN certbot certonly \
-    -d mvdcreativo.tk \
-    --noninteractive \
-    --standalone \
-    --agree-tos \
-    --register-unsafely-without-email
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
