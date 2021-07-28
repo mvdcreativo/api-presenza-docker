@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     # needed for gd
     libfreetype6-dev \
     libjpeg62-turbo-dev \
+    certbot \
     libpng-dev 
 
 # Clear cache
@@ -27,7 +28,6 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 RUN mkdir -p /var/www/html
 
-RUN apt-get install certbot
 RUN certbot certonly \
     -d mvdcreativo.tk \
     --noninteractive \
