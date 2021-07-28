@@ -10,13 +10,11 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - certs:/etc/nginx/certs:ro
       - vhostd:/etc/nginx/vhost.d
-      - html:/usr/share/nginx/html
+      - html:/var/www/html
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
     depends_on:
       - php
-    networks:
-      - laravel
 
   letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
@@ -26,12 +24,10 @@ services:
     volumes:
       - certs:/etc/nginx/certs:rw
       - vhostd:/etc/nginx/vhost.d
-      - html:/usr/share/nginx/html
+      - html:/var/www/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
     depends_on:
       - nginx-proxy
-    networks:
-      - laravel
 
   nginx:
     build:
