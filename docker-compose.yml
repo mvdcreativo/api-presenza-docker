@@ -14,7 +14,6 @@ services:
       - certs:/etc/nginx/certs:delegated
       - vhostd:/etc/nginx/vhost.d
       - html:/var/www/html
-      - ./src:/var/www/html:delegated
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
     depends_on:
