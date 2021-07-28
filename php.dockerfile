@@ -27,6 +27,14 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 RUN mkdir -p /var/www/html
 
+RUN apt-get install certbot
+RUN certbot certonly \
+    -d mvdcreativo.tk \
+    --noninteractive \
+    --standalone \
+    --agree-tos \
+    --register-unsafely-without-email
+
 # RUN chown laravel:laravel /var/www/html
 
 RUN chmod -R 777 /var/www/html
