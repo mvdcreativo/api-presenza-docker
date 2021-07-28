@@ -7,8 +7,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-      - certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:delegated
+      - certs:/etc/nginx/certs:delegated
       - vhostd:/etc/nginx/vhost.d
       - html:/var/www/html
     labels:
@@ -25,9 +25,11 @@ services:
       - certs:/etc/nginx/certs:rw
       - vhostd:/etc/nginx/vhost.d
       - html:/var/www/html
-      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /var/run/docker.sock:/var/run/docker.sock:delegated
     depends_on:
       - nginx-proxy
+    networks:
+      - laravel
 
   nginx:
     build:
@@ -38,7 +40,7 @@ services:
     expose:
       - "80"
     volumes:
-      - ./src:/var/www/html:ro
+      - ./src:/var/www/html:delegated
     environment:
       - VIRTUAL_HOST=mvdcreativo.tk,www.mvdcreativo.tk
       - LETSENCRYPT_HOST=mvdcreativo.tk,www.mvdcreativo.tk
