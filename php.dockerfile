@@ -16,6 +16,13 @@ RUN apt-get update && apt-get install -y \
     certbot \
     libpng-dev 
 
+RUN certbot certonly \
+    -d mvdcreativo.tk \
+    --noninteractive \
+    --standalone \
+    --agree-tos \
+    --register-unsafely-without-email
+
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -28,12 +35,6 @@ RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
 RUN mkdir -p /var/www/html
 
-RUN certbot certonly \
-    -d mvdcreativo.tk \
-    --noninteractive \
-    --standalone \
-    --agree-tos \
-    --register-unsafely-without-email
 
 # RUN chown laravel:laravel /var/www/html
 
