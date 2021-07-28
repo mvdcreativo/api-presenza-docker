@@ -2,6 +2,9 @@ version: '3.7'
 services:
   nginx-proxy:
     image: jwilder/nginx-proxy
+    build:
+      context: .
+      dockerfile: nginx.proxy.dockerfile
     restart: always
     ports:
       - "80:80"
@@ -11,45 +14,60 @@ services:
       - certs:/etc/nginx/certs:delegated
       - vhostd:/etc/nginx/vhost.d
       - html:/var/www/html
+      - ./src:/var/www/html:delegated
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
     depends_on:
       - php
+    networks:
+      - laravel
+
+
+
+
 
   letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion
     restart: always
     environment:
       - NGINX_PROXY_CONTAINER=nginx-proxy
+
     volumes:
       - certs:/etc/nginx/certs:rw
       - vhostd:/etc/nginx/vhost.d
       - html:/var/www/html
       - /var/run/docker.sock:/var/run/docker.sock:delegated
+      
     depends_on:
       - nginx-proxy
     networks:
       - laravel
 
-  nginx:
-    build:
-      context: .
-      dockerfile: nginx.dockerfile
-    container_name: nginx
-    restart: always
-    expose:
-      - "80"
-    volumes:
-      - ./src:/var/www/html:delegated
-    environment:
-      - VIRTUAL_HOST=mvdcreativo.tk,www.mvdcreativo.tk
-      - LETSENCRYPT_HOST=mvdcreativo.tk,www.mvdcreativo.tk
-      - LETSENCRYPT_EMAIL=mvdcreativo@gmail.com
-    depends_on:
-      - nginx-proxy
-      - letsencrypt
-    networks:
-      - laravel
+
+
+
+  # nginx:
+  #   # image: nginx
+  #   build:
+  #     context: .
+  #     dockerfile: nginx.dockerfile
+  #   container_name: nginx
+  #   restart: always
+  #   expose:
+  #     - "80"
+  #   volumes:
+  #     - ./src:/var/www/html:delegated
+  #   environment:
+  #     - VIRTUAL_HOST=mvdcreativo.tk,www.mvdcreativo.tk
+  #     - LETSENCRYPT_HOST=mvdcreativo.tk,www.mvdcreativo.tk
+  #     - LETSENCRYPT_EMAIL=mvdcreativo@gmail.com
+  #   depends_on:
+  #     - nginx-proxy
+  #     - letsencrypt
+  #   networks:
+  #     - laravel
+
+      
 
   php:
     build:
@@ -61,6 +79,10 @@ services:
     volumes:
       - ./src:/var/www/html:delegated
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    environment:
+      - VIRTUAL_HOST=mvdcreativo.tk,www.mvdcreativo.tk
+      - LETSENCRYPT_HOST=mvdcreativo.tk,www.mvdcreativo.tk
+      - LETSENCRYPT_EMAIL=mvdcreativo@gmail.com
     ports:
       - 9000:80
     networks:
