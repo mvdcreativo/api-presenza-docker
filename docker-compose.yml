@@ -13,11 +13,11 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:delegated
       - certs:/etc/nginx/certs:delegated
       - vhostd:/etc/nginx/vhost.d
-      - html:/var/www/html
+      # - html:/var/www/html
     labels:
       - com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy
-    depends_on:
-      - php
+    environment:
+      - DEFAULT_HOST=mvdcreativo.tk
     networks:
       - laravel
 
@@ -34,8 +34,8 @@ services:
     volumes:
       - certs:/etc/nginx/certs:rw
       - vhostd:/etc/nginx/vhost.d
-      - html:/var/www/html
-      - /var/run/docker.sock:/var/run/docker.sock:delegated
+      # - html:/var/www/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       
     depends_on:
       - nginx-proxy
@@ -45,26 +45,27 @@ services:
 
 
 
-  # nginx:
-  #   # image: nginx
-  #   build:
-  #     context: .
-  #     dockerfile: nginx.dockerfile
-  #   container_name: nginx
-  #   restart: always
-  #   expose:
-  #     - "80"
-  #   volumes:
-  #     - ./src:/var/www/html:delegated
-  #   environment:
-  #     - VIRTUAL_HOST=mvdcreativo.tk,www.mvdcreativo.tk
-  #     - LETSENCRYPT_HOST=mvdcreativo.tk,www.mvdcreativo.tk
-  #     - LETSENCRYPT_EMAIL=mvdcreativo@gmail.com
-  #   depends_on:
-  #     - nginx-proxy
-  #     - letsencrypt
-  #   networks:
-  #     - laravel
+  nginx:
+    # image: nginx
+    build:
+      context: .
+      dockerfile: nginx.dockerfile
+    container_name: nginx
+    restart: always
+    expose:
+      - "80"
+    volumes:
+      - ./src:/var/www/html:delegated
+    environment:
+      - VIRTUAL_HOST=mvdcreativo.tk,www.mvdcreativo.tk
+      - LETSENCRYPT_HOST=mvdcreativo.tk,www.mvdcreativo.tk
+      - LETSENCRYPT_EMAIL=mvdcreativo@gmail.com
+    depends_on:
+      - nginx-proxy
+      - letsencrypt
+      - php
+    networks:
+      - laravel
 
       
 
@@ -78,10 +79,6 @@ services:
     volumes:
       - ./src:/var/www/html:delegated
       - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
-    environment:
-      - VIRTUAL_HOST=mvdcreativo.tk,www.mvdcreativo.tk
-      - LETSENCRYPT_HOST=mvdcreativo.tk,www.mvdcreativo.tk
-      - LETSENCRYPT_EMAIL=mvdcreativo@gmail.com
     ports:
       - 9000:80
     networks:
